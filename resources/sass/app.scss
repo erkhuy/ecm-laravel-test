@@ -2,6 +2,7 @@
 @import url('https://fonts.googleapis.com/css?family=Nunito');
 // Variables
 @import 'variables';
+@import 'mixins';
 $fa-font-path: "../webfonts";
 // Bootstrap
 @import '~bootstrap/scss/bootstrap';
@@ -13,3 +14,26 @@ $fa-font-path: "../webfonts";
     background-color: #fff;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
 }
+
+.router-link-exact-active {
+    background-color: $blue;
+    color: #fff;
+}
+
+@include extra-small-screen {
+    .text-size {
+        font-size: 11px;
+    }
+}
+
+@include small-screen {
+    .text-size {
+        font-size: 12px;
+    }
+}
+
+@include medium-screen {}
+
+@include large-screen {}
+
+@include extra-large-screen {}
