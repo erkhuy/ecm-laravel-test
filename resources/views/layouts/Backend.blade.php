@@ -154,6 +154,7 @@
                         </div>
                         <div class="info">
                         <a href="#" class="d-block">{{Auth::user()->name}}</a>
+                        <p>{{Auth::user()->role}}</p>
                         </div>
                     </div>
                     <!-- Sidebar Menu -->
@@ -173,12 +174,14 @@
                                     <p> Profile </p>
                                 </router-link>
                             </li>
+                            @can('isAdmin')
                             <li class="nav-item">
                                 <router-link to="/developer" class="nav-link">
                                     <i class="nav-icon fa fa-cogs orange"></i>
                                     <p> Developee </p>
                                 </router-link>
                             </li>
+
                             <li class="nav-item">
                                     <a href="#" class="nav-link">
                                         <i class="nav-icon fa fa-image green"></i>
@@ -204,6 +207,7 @@
 
                             </ul>
                         </li>
+                        @endcan
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('logout') }}"
                                 onclick="event.preventDefault();
@@ -261,5 +265,13 @@
 
 
 <script src="{{asset('js/app.js')}}"></script>
+
+    @auth
+        <script>
+
+            window.user = @json(auth()->user())
+
+        </script>
+    @endauth
 </body>
 </html>

@@ -11,6 +11,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Image;
 use Mockery\Exception;
 
 class UserController extends Controller
@@ -61,9 +62,6 @@ class UserController extends Controller
     }
     public function profile()
     {
-        // $user = User::findOrFail(Auth::user()->id);
-
-        // return response()->json($user);
         return auth('api')->user();
 
     }
@@ -101,13 +99,40 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
+        $this->authorize('isAdmin');
+
         $user = User::findOrFail($id);
         $user->delete();
         return ['Message' => 'userDelete'];
     }
-    public function profile2()
+    public function updateProfile(Request $request)
     {
-        return auth('api')->user();
+        $user = auth('api')->user();
+
+        $currentImg = $user->img;
+        if ($request->img != $currentImg) {
+            $name = time() . '.' . explode('/', explode(':', substr($request->img, 0, strpos($request->img, ';')))[1])[1];
+            Image::make($request->img)->save(public_path('images/profile/') . $name);
+            $request->img = $name;
+        }
+
+        $userImg = public_path('images/profile/') . $currentImg;
+        if (file_exists($userImg)) {
+            unlink($userImg);
+        }
+        $status = $user->update([
+            $user->img = $request->img,
+            $user->name = $request->name,
+            $user->email = $request->email,
+            $user->role = $request->role,
+            $user->address = $request->address,
+            $user->phone = $request->phone,
+        ]);
+
+        return response()->json([
+            'sataus' => $status,
+        ]);
+
     }
 
 }

@@ -1,6 +1,5 @@
 <template>
   <div class="container">
-    <p>{{this.form.id}}</p>
     <div class="row justify-content-center">
       <div class="col-md-12 mt-3">
         <div class="card card-widget widget-user">
@@ -9,11 +8,11 @@
             class="widget-user-header text-white"
             style="background: url('/images/admin/logo.png') center center;"
           >
-            <h3 class="widget-user-username">Elizabeth Pierce</h3>
+            <h3 class="widget-user-username text-info">{{form.name}}</h3>
             <h5 class="widget-user-desc">Web Designer</h5>
           </div>
           <div class="widget-user-image">
-            <img class="img-circle" src alt="User Avatar" />
+            <img class="img-circle" :src="getProfileImg()" alt="User Avatar" />
           </div>
           <div class="card-footer">
             <div class="row">
@@ -147,7 +146,11 @@
                   </div>
                   <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10">
-                      <button type="submit" class="btn btn-danger">Submit</button>
+                      <button
+                        @click.prevent="updateInfo"
+                        type="submit"
+                        class="btn btn-outline-info"
+                      >Update</button>
                     </div>
                   </div>
                 </form>
@@ -181,15 +184,39 @@ export default {
     };
   },
   methods: {
+    getProfileImg() {
+      return this.form.img.indexOf("base64") != -1
+        ? this.form.img
+        : "images/profile/" + this.form.img;
+    },
+    updateInfo() {
+      this.$Progress.start();
+      this.form
+        .put("api/profile")
+        .then(() => {
+          this.$Progress.finish();
+        })
+        .catch(() => {
+          this.$Progress.fail();
+        });
+    },
     updateProfile(e) {
       let file = e.target.files[0];
 
       let reader = new FileReader();
-      reader.onloadend = file => {
-        // console.log("RESULT", reader.result);
-        this.form.img = reader.result;
-      };
-      reader.readAsDataURL(file);
+      if (file["size"] < 2111775) {
+        reader.onloadend = file => {
+          // console.log("RESULT", reader.result);
+          this.form.img = reader.result;
+        };
+        reader.readAsDataURL(file);
+      } else {
+        Swal({
+          type: "error",
+          title: "Oops...",
+          text: "This image is too long to upload!"
+        });
+      }
     }
   },
   created() {

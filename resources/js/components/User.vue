@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div class="row justify-content-center">
+    <div class="row justify-content-center" v-if="$gate.isAdmin()">
       <div class="col-md-12 col-sm-12">
         <div class="card" style="width:100%; height:100%;">
           <div class="card-header">
@@ -36,10 +36,10 @@
                   <td>{{user.address}}</td>
                   <td>{{user.role }}</td>
                   <td>
-                    <a href="#" @click="editModal(user)">
+                    <a href="#" @click="editModal(user)" title="edit">
                       <i class="fa fa-edit blue"></i>
                     </a>
-                    <a href="#" @click="deleteUser(user.id)">
+                    <a href="#" @click="deleteUser(user.id)" title="delete" v-if="$gate.isAdmin()">
                       <i class="fa fa-trash red"></i>
                     </a>
                   </td>
@@ -233,7 +233,9 @@ export default {
         });
     },
     loadUser() {
-      axios.get("api/user").then(({ data }) => (this.users = data.data));
+      if (this.$gate.isAdmin) {
+        axios.get("api/user").then(({ data }) => (this.users = data.data));
+      }
     },
     deleteUser(id) {
       Swal.fire({
@@ -267,7 +269,7 @@ export default {
   },
   created() {
     this.loadUser();
-    // setInterval(()=>this.loadUser(), 3000);
+
     this.$on("AfterCreated", () => {
       this.loadUser();
     });

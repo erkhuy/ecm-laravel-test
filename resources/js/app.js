@@ -9,7 +9,11 @@ window.Vue = require('vue');
 
 
 import Vue from 'vue'
-import { Form, HasError, AlertError } from 'vform'
+import {
+    Form,
+    HasError,
+    AlertError
+} from 'vform'
 window.Form = Form;
 Vue.component(HasError.name, HasError)
 Vue.component(AlertError.name, AlertError)
@@ -17,6 +21,11 @@ Vue.component(AlertError.name, AlertError)
 import VueRouter from 'vue-router'
 import VueProgressBar from 'vue-progressbar'
 import Swal from 'sweetalert2'
+
+
+import Gate from './Gate'
+Vue.prototype.$gate = new Gate(window.user);
+
 window.Swal = Swal;
 
 const toast = Swal.mixin({
@@ -32,11 +41,22 @@ Vue.use(VueRouter)
 let Fire = new Vue();
 Window.Fire = Fire;
 
-let routes = [
-    { path: '/dashboard', component: require('./components/Dashboard.vue').default },
-    { path: '/profile', component: require('./components/Profile.vue').default },
-    { path: '/users', component: require('./components/User.vue').default },
-    { path: '/developer', component: require('./components/Developer.vue').default }
+let routes = [{
+        path: '/dashboard',
+        component: require('./components/Dashboard.vue').default
+    },
+    {
+        path: '/profile',
+        component: require('./components/Profile.vue').default
+    },
+    {
+        path: '/users',
+        component: require('./components/User.vue').default
+    },
+    {
+        path: '/developer',
+        component: require('./components/Developer.vue').default
+    }
 ]
 
 const router = new VueRouter({
@@ -79,6 +99,8 @@ Vue.component(
     'passport-personal-access-tokens',
     require('./components/passport/PersonalAccessTokens.vue').default
 );
+
+Vue.component('not-found', require('./components/NotFound.vue').default);
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
