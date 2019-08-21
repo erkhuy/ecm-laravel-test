@@ -174,6 +174,12 @@
                                 </router-link>
                             </li>
                             <li class="nav-item">
+                                <router-link to="/developer" class="nav-link">
+                                    <i class="nav-icon fa fa-cogs orange"></i>
+                                    <p> Developee </p>
+                                </router-link>
+                            </li>
+                            <li class="nav-item">
                                     <a href="#" class="nav-link">
                                         <i class="nav-icon fa fa-image green"></i>
                                         <p> logo </p>

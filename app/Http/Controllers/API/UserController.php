@@ -2,25 +2,23 @@
 
 namespace App\Http\Controllers\API;
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\DB;
-use Mockery\Exception;
-use App\Models\User;
-use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\Users\CreateUserRequest;
-use Illuminate\Http\Response;
 use App\Http\Requests\Users\UpdateUserRequest;
+use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Mockery\Exception;
+
 class UserController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index()
     {
-        $users=User::paginate(5);
+        $users = User::paginate(5);
         return response()->json($users);
     }
 
@@ -33,23 +31,21 @@ class UserController extends Controller
     public function store(CreateUserRequest $request)
     {
 
+        try {
+            DB::beginTransaction();
+            User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'phone' => $request->phone,
+                'address' => $request->address,
+                'password' => Hash::make($request->password),
+                'role' => $request->role,
+            ]);
 
-        try{
-                DB::beginTransaction();
-                User::create([
-                        'name'=>$request->name,
-                        'email'=>$request->email,
-                        'phone'=>$request->phone,
-                        'address'=>$request->address,
-                        'password'=>Hash::make($request->password),
-                        'role'=>$request->role,
-                ]);
+            DB::commit();
 
-                DB::commit();
-
-        }
-        catch( Exception $e){
-                DB::rollback();
+        } catch (Exception $e) {
+            DB::rollback();
         }
     }
 
@@ -61,9 +57,16 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        //
-    }
 
+    }
+    public function profile()
+    {
+        // $user = User::findOrFail(Auth::user()->id);
+
+        // return response()->json($user);
+        return auth('api')->user();
+
+    }
     /**
      * Update the specified resource in storage.
      *
@@ -73,19 +76,18 @@ class UserController extends Controller
      */
     public function update(UpdateUserRequest $request, $id)
     {
-        $user=User::findOrFail($id);
-        try{
-                DB::beginTransaction();
-                    $user->update([
-                        'name'=>$request->name,
-                        'email'=>$request->email,
-                        'phone'=>$request->phone,
-                        'address'=>$request->address,
-                        'role'=>$request->role,
-                    ]);
-                DB::commit();
-        }
-        catch(Exception $e){
+        $user = User::findOrFail($id);
+        try {
+            DB::beginTransaction();
+            $user->update([
+                'name' => $request->name,
+                'email' => $request->email,
+                'phone' => $request->phone,
+                'address' => $request->address,
+                'role' => $request->role,
+            ]);
+            DB::commit();
+        } catch (Exception $e) {
             DB::rollback();
         }
         return $request->all();
@@ -99,8 +101,13 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        $user=User::findOrFail($id);
+        $user = User::findOrFail($id);
         $user->delete();
-        return ['Message'=>'userDelete'];
+        return ['Message' => 'userDelete'];
     }
+    public function profile2()
+    {
+        return auth('api')->user();
+    }
+
 }

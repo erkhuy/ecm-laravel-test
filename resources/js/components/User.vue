@@ -207,7 +207,7 @@ export default {
             type: "success",
             title: "Update in successfully"
           });
-             this.$emit("AfterCreated");
+          this.$emit("AfterCreated");
           this.$Progress.finish();
         })
         .catch(() => {
