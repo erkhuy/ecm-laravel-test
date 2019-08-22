@@ -154,7 +154,7 @@
                         </div>
                         <div class="info">
                         <a href="#" class="d-block">{{Auth::user()->name}}</a>
-                        <p>{{Auth::user()->role}}</p>
+                        <p>{{Auth::user()->roles}}</p>
                         </div>
                     </div>
                     <!-- Sidebar Menu -->
@@ -262,16 +262,13 @@
     <!-- ./wrapper -->
 
 <!-- REQUIRED SCRIPTS -->
+@auth
+<script>
+    window.user = @json(auth()->user());
 
+</script>
+@endauth
 
 <script src="{{asset('js/app.js')}}"></script>
-
-    @auth
-        <script>
-
-            window.user = @json(auth()->user())
-
-        </script>
-    @endauth
 </body>
 </html>

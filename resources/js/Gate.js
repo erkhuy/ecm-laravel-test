@@ -4,15 +4,15 @@ export default class Gate {
         this.user = user;
     }
     isAdmin() {
-        return this.user.role == 'Admin';
-
+        return this.user.roles == 'Admin';
     }
     isUser() {
-        return this.user.role == 'User';
+        return this.user.roles == 'User';
 
     }
     isAuthor() {
-        return this.user.role == 'Author';
+        return this.user.roles == 'Author';
 
     }
+
 }

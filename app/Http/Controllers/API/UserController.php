@@ -12,15 +12,17 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Image;
-use Mockery\Exception;
 
 class UserController extends Controller
 {
 
     public function index()
     {
-        $users = User::paginate(5);
-        return response()->json($users);
+
+        $this->authorizeResource('isAdmin');
+        $user = User::paginate(5);
+        return response()->json($user);
+
     }
 
     /**
@@ -40,7 +42,7 @@ class UserController extends Controller
                 'phone' => $request->phone,
                 'address' => $request->address,
                 'password' => Hash::make($request->password),
-                'role' => $request->role,
+                'roles' => $request->roles,
             ]);
 
             DB::commit();
@@ -82,7 +84,7 @@ class UserController extends Controller
                 'email' => $request->email,
                 'phone' => $request->phone,
                 'address' => $request->address,
-                'role' => $request->role,
+                'roles' => $request->roles,
             ]);
             DB::commit();
         } catch (Exception $e) {
@@ -99,11 +101,12 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        $this->authorize('isAdmin');
+        $this->authorizeResource('isAdmin');
 
         $user = User::findOrFail($id);
         $user->delete();
         return ['Message' => 'userDelete'];
+
     }
     public function updateProfile(Request $request)
     {
@@ -124,7 +127,7 @@ class UserController extends Controller
             $user->img = $request->img,
             $user->name = $request->name,
             $user->email = $request->email,
-            $user->role = $request->role,
+            $user->roles = $request->roles,
             $user->address = $request->address,
             $user->phone = $request->phone,
         ]);

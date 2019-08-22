@@ -20,7 +20,7 @@ class AppServiceProvider extends ServiceProvider
         //
     }
     protected $policies = [
-        'App\Model' => 'App\Policies\ModelPolicy',
+        \App\Model::class => \App\Policies\ModelPolicy::class,
     ];
 
     public function boot()
@@ -29,10 +29,11 @@ class AppServiceProvider extends ServiceProvider
         Schema::defaultStringLength(191);
 
         Gate::define('isAdmin', function ($user) {
-            return $user->role == 'Admin';
+            return ($user->roles == 'Admin') ? true : false;
         });
+
         Gate::define('isUser', function ($user) {
-            return $user->role == 'User';
+            return $user->roles == 'User';
         });
 
         Passport::routes();

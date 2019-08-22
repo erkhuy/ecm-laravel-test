@@ -1,7 +1,7 @@
 <template>
   <div class="container">
-    <div class="row justify-content-center" v-if="$gate.isAdmin()">
-      <div class="col-md-12 col-sm-12">
+    <div class="row justify-content-center">
+      <div class="col-md-12 col-sm-12" v-if="$gate.isAdmin()">
         <div class="card" style="width:100%; height:100%;">
           <div class="card-header">
             <h3 class="card-title">User table</h3>
@@ -34,12 +34,12 @@
                     <span class="tag tag-success">{{user.phone}}</span>
                   </td>
                   <td>{{user.address}}</td>
-                  <td>{{user.role }}</td>
+                  <td>{{user.roles }}</td>
                   <td>
                     <a href="#" @click="editModal(user)" title="edit">
                       <i class="fa fa-edit blue"></i>
                     </a>
-                    <a href="#" @click="deleteUser(user.id)" title="delete" v-if="$gate.isAdmin()">
+                    <a href="#" @click="deleteUser(user.id)" title="delete">
                       <i class="fa fa-trash red"></i>
                     </a>
                   </td>
@@ -52,6 +52,11 @@
         <!-- /.card -->
       </div>
     </div>
+
+    <div v-if="!$gate.isAdmin()">
+      <not-found></not-found>
+    </div>
+
     <!-- model create -->
     <div
       class="modal fade"
@@ -125,17 +130,17 @@
               <div class="form-group">
                 <select
                   class="form-control"
-                  id="role"
-                  v-model="form.role"
-                  name="role"
-                  :class="{ 'is-invalid': form.errors.has('role') }"
+                  id="roles"
+                  v-model="form.roles"
+                  name="roles"
+                  :class="{ 'is-invalid': form.errors.has('roles') }"
                 >
                   <option value>--select Role --</option>
                   <option value="Admin">Admin</option>
                   <option value="User">User</option>
                   <option value="Author">Author</option>
                 </select>
-                <has-error :form="form" field="role"></has-error>
+                <has-error :form="form" field="roles"></has-error>
               </div>
               <div class="form-group">
                 <label>Address</label>
@@ -176,7 +181,7 @@ export default {
         phone: "",
         address: "",
         password: "",
-        role: ""
+        roles: ""
       }),
       users: {}
     };
@@ -233,9 +238,7 @@ export default {
         });
     },
     loadUser() {
-      if (this.$gate.isAdmin) {
-        axios.get("api/user").then(({ data }) => (this.users = data.data));
-      }
+      axios.get("api/user").then(({ data }) => (this.users = data.data));
     },
     deleteUser(id) {
       Swal.fire({

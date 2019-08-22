@@ -115,15 +115,15 @@
                     </div>
                   </div>
                   <div class="form-group">
-                    <label for="role" class="col-sm-2 control-label">Role</label>
+                    <label for="roles" class="col-sm-2 control-label">roles</label>
 
                     <div class="col-sm-10">
                       <input
                         type="text"
                         class="form-control"
-                        id="role"
-                        placeholder="role"
-                        v-model="form.role"
+                        id="roles"
+                        placeholder="roles"
+                        v-model="form.roles"
                       />
                     </div>
                   </div>
@@ -178,7 +178,7 @@ export default {
         phone: "",
         address: "",
         password: "",
-        role: "",
+        roles: "",
         img: ""
       })
     };

@@ -1,7 +1,6 @@
 <template>
   <div class="container">
     <div class="row justify-content-center">
-      <p>dnakj</p>
       <not-found></not-found>
     </div>
   </div>
