@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
 use Image;
 
@@ -19,10 +20,13 @@ class UserController extends Controller
     public function index()
     {
 
-        $this->authorizeResource('isAdmin');
-        $user = User::paginate(5);
-        return response()->json($user);
+        // $this->authorizeResource('isAdmin');
 
+        $user = User::paginate(5);
+        if (Gate::allows('isAdmin')) {
+
+        }
+        return response()->json($user);
     }
 
     /**

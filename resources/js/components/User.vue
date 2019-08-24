@@ -11,6 +11,7 @@
               </button>
             </div>
           </div>
+
           <!-- /.card-header -->
           <div class="card-body table-responsive p-0">
             <table class="table table-hover">
@@ -26,7 +27,7 @@
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="(user , index ) in users" :key="index">
+                <tr v-for="(user , index ) in users.data" :key="index">
                   <td>{{user.id }}</td>
                   <td>{{user.name | upText}}</td>
                   <td>{{user.email }}</td>
@@ -47,7 +48,18 @@
               </tbody>
             </table>
           </div>
+
           <!-- /.card-body -->
+          <div class="card-footer">
+            <div class="row">
+              <div class="col-md-6">
+                <pagination :data="users" @pagination-change-page="getResults"></pagination>
+              </div>
+              <div class="col-md-6">
+                <a @click.prevent="printme" class="btn btn-outline-info">Print Me</a>
+              </div>
+            </div>
+          </div>
         </div>
         <!-- /.card -->
       </div>
@@ -187,6 +199,14 @@ export default {
     };
   },
   methods: {
+    printme() {
+      window.print();
+    },
+    getResults(page = 1) {
+      axios.get("api/user?page=" + page).then(response => {
+        this.users = response.data;
+      });
+    },
     newModal() {
       this.actionMode = "create";
       this.form.reset();
@@ -238,7 +258,9 @@ export default {
         });
     },
     loadUser() {
-      axios.get("api/user").then(({ data }) => (this.users = data.data));
+      if (this.$gate.isAdmin()) {
+        axios.get("api/user").then(({ data }) => (this.users = data));
+      }
     },
     deleteUser(id) {
       Swal.fire({

@@ -187,7 +187,7 @@ export default {
     getProfileImg() {
       return this.form.img.indexOf("base64") != -1
         ? this.form.img
-        : "images/profile/" + this.form.img;
+        : "../../../public/images/profile/" + this.form.img;
     },
     updateInfo() {
       this.$Progress.start();

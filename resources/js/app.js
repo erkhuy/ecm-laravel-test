@@ -25,7 +25,7 @@ import Swal from 'sweetalert2'
 
 import Gate from './Gate'
 Vue.prototype.$gate = new Gate(window.user);
-
+Vue.component('pagination', require('laravel-vue-pagination'));
 window.Swal = Swal;
 
 const toast = Swal.mixin({
@@ -56,7 +56,12 @@ let routes = [{
     {
         path: '/developer',
         component: require('./components/Developer.vue').default
-    }
+    },
+    {
+        path: '/*',
+        component: require('./components/NotFound.vue').default
+    },
+
 ]
 
 const router = new VueRouter({
@@ -122,5 +127,9 @@ Vue.component('not-found', require('./components/NotFound.vue').default);
 
 const app = new Vue({
     el: '#app',
-    router
+    router,
+    data: {
+        searchKey: '',
+
+    }
 });
